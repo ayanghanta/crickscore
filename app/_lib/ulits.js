@@ -18,7 +18,7 @@ export function rotateStrike(
 
   let newStrikerIndex;
 
-  if (lastDelivery.type === "WD") {
+  if (lastDelivery.type === "WD" || lastDelivery.type === "NO") {
     if (isOddRun) newStrikerIndex = currentStrikerIndex;
     else newStrikerIndex = nonStrikerIndex;
   } else {
@@ -30,6 +30,10 @@ export function rotateStrike(
 
   return newStrikerIndex;
 }
+
+export const getRunData = (bowl) => {
+  return { isLegal: bowl.isLegal, run: bowl.run, wicket: bowl.wicket ? 1 : 0 };
+};
 
 export class Bowl {
   constructor(bowler, batter) {
@@ -60,9 +64,10 @@ export class Bowl {
   }
   wicketFall(run = 0, outBatter, wicketType) {
     this.run = run;
-    this.type = "WICKET";
+    this.wicket = true;
+    this.type = this.type ? this.type : "W";
     this.outBatter = outBatter ?? this.batter;
-    this.wicketType = "BOWLD";
+    this.wicketType = wicketType;
     return this;
   }
 }
@@ -75,5 +80,16 @@ export class Batter {
   }
   scoreRun(run) {
     this.runs = [...this.runs, run];
+  }
+}
+
+export class Bowler {
+  constructor(name) {
+    this.name = name;
+    this.id = uid();
+    this.delivarys = [];
+  }
+  bowl(ball) {
+    this.delivarys = [...this.delivarys, ball];
   }
 }

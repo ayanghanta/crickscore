@@ -1,7 +1,14 @@
 "use client";
 
 import { createContext, useContext, useReducer } from "react";
-import { calcLegalDelivary, rotateStrike, Bowl } from "../_lib/ulits";
+import {
+  calcLegalDelivary,
+  rotateStrike,
+  Bowl,
+  Batter,
+  Bowler,
+  getRunData,
+} from "../_lib/ulits";
 
 const InningsContext = createContext();
 
@@ -34,21 +41,21 @@ const state = {
 };
 */
 const initialState = {
-  allOvers: [[]],
+  // allOvers: [[]],
+  allOvers: [],
   currentOver: [],
-  currentBatters: [{}, {}],
-  // onStrike: 1,
-  // currentBatters: [
-  //   { name: "Subhman Gill", id: "a1" },
-  //   { name: "Virat Kohli", id: "a2" },
-  // ],
-  onStrike: 1,
-  allPlayers: [],
-  isNewOver: false,
+  // currentBatters: [{}, {}],
+  currentBatters: [new Batter("Subhamn Gill"), new Batter("Viart Kohli")],
+  onStrike: 0,
+  // currentBowler: new Bowler("Jasprit"),
+  currentBowler: {},
+  allBowlers: [new Bowler("sapnil"), new Bowler("Bolt")],
+  allBatters: [],
   totalWicketFall: 0,
   isInningsEnd: false,
   totalOver: 5,
   over: 0,
+  isNewOver: true,
   isFreeHit: false,
   isGameOn: false,
 };
@@ -85,20 +92,36 @@ function updateAllOversData(state, bowl) {
     isOverEnd
   );
 
-  // IS INNINGS END
-  // 1. in 10 wicket fall
-  // if(state)
-
   return {
     ...state,
     currentOver: updatedOver,
-
     allOvers: updatedAllOvers,
     isNewOver: isOverEnd,
     over: updateOver,
     isInningsEnd: updateOver >= state.totalOver,
     isFreeHit: isNextBallFreeHit,
     onStrike,
+    currentBowler: isOverEnd ? {} : state.currentBowler,
+    isGameOn: !isOverEnd,
+  };
+}
+
+function updateAfterWicketFall(state, outBatter) {
+  // delete the batter form the current batter
+  const currentBatters = state.currentBatters.map((batter) =>
+    batter.id === outBatter.id ? {} : batter
+  );
+
+  // allBatters
+  // if batter on strike the rest this filed
+  const onStrikeBatter = state.onStrike === outBatter ? "" : state.onStrike;
+
+  return {
+    currentBatters,
+    onStrike: onStrikeBatter,
+    totalWicketFall: state.totalWicketFall + 1,
+    isInningsEnd: state.totalWicketFall + 1 === 10,
+    isGameOn: false,
   };
 }
 
@@ -110,7 +133,10 @@ function reducer(state, action) {
     case "scoreRun":
       const { bowler, batter, run: scoreRun } = action.payload;
       const bowl = new Bowl(bowler, batter).score(scoreRun);
-      batter.scoreRun(scoreRun);
+
+      batter.scoreRun(getRunData(bowl));
+      bowler.bowl(getRunData(bowl));
+
       const updatedData = updateAllOversData(state, bowl);
 
       return {
@@ -118,65 +144,142 @@ function reducer(state, action) {
       };
 
     case "bowlWideBall":
-      const wideBall = new Bowl("arjun", "rampal").wideBall(action.payload);
+      const {
+        bowler: bowlerW,
+        batter: batterW,
+        run: totalRunW,
+        isOut,
+        outType,
+        outBatter: outBatterInWideBall,
+      } = action.payload;
+
+      let wideBall = new Bowl(bowlerW, batterW).wideBall(totalRunW);
+
+      if (isOut && outType === "stumps") {
+        wideBall = wideBall.wicketFall(totalRunW, outBatterInWideBall, outType);
+        bowlerW.bowl(getRunData(wideBall));
+      } else {
+        bowlerW.bowl(getRunData(wideBall));
+      }
+
       const updatedDataAfterWide = updateAllOversData(state, wideBall);
-      return { ...updatedDataAfterWide };
+      const updateCurrentBattersW = isOut
+        ? updateAfterWicketFall(state, outBatterInWideBall)
+        : {};
+
+      return { ...updatedDataAfterWide, ...updateCurrentBattersW };
 
     case "bowlNoBall":
-      const noBall = new Bowl("arjun", "rampal").noBall(action.payload);
-      const updatedDataAfterNo = updateAllOversData(state, noBall);
+      const {
+        bowler: bowlerN,
+        batter: batterN,
+        run: totalRunN,
+        isByesRun,
+        isOut: isOutInNoBall,
+        outType: outTypeN,
+        outBatter: outBatterInNoball,
+      } = action.payload;
 
-      return { ...updatedDataAfterNo };
+      let noBall = new Bowl(bowlerN, batterN).noBall(totalRunN);
+
+      if (!isByesRun)
+        batterN.scoreRun(getRunData({ ...noBall, run: noBall.run - 1 }));
+
+      if (isOutInNoBall && outTypeN === "run-out") {
+        noBall = noBall.wicketFall();
+      }
+
+      bowlerN.bowl(getRunData(noBall));
+
+      if (isOutInNoBall) {
+        noBall = noBall.wicketFall(totalRunN, outBatterInNoball, outTypeN);
+      }
+
+      // if (isOut && outType === "stumps") {
+      //   wideBall = wideBall.wicketFall(totalRunW, outBatterInWideBall, outType);
+      //   bowlerW.bowl(getRunData(wideBall));
+      // } else {
+      //   bowlerW.bowl(getRunData(wideBall));
+      // }
+
+      // const updatedDataAfterWide = updateAllOversData(state, wideBall);
+      // const updateCurrentBattersW = isOut
+      //   ? updateAfterWicketFall(state, outBatterInWideBall)
+      //   : {};
+
+      const updatedDataAfterNo = updateAllOversData(state, noBall);
+      const updateCurrentBattersN = isOutInNoBall
+        ? updateAfterWicketFall(state, outBatterInNoball)
+        : {};
+
+      return { ...updatedDataAfterNo, ...updateCurrentBattersN };
 
     case "wicketFall":
-      const { wicketType, outBatter, run } = action.payload;
-      const wicketBowl = new Bowl("Arjun", "rampal").wicketFall(
+      const {
+        wicketType,
+        outBatter,
+        batter: batterWk,
+        bowler: bowlerWk,
+        run,
+        isByesRun: isByes,
+      } = action.payload;
+
+      const wicketBowl = new Bowl(bowlerWk, batterWk).wicketFall(
         run,
         outBatter,
         wicketType
       );
-      const updatedDataW = updateAllOversData(state, wicketBowl);
 
-      // delete the batter form the current batter
-      const currentBatters = state.currentBatters.map((batter) =>
-        batter.id === outBatter.id ? {} : batter
-      );
+      bowlerWk.bowl(getRunData({ ...wicketBowl, run: 0 }));
+      if (isByes) batterWk.scoreRun(getRunData({ ...wicketBowl, run: 0 }));
+      if (!isByes) batterWk.scoreRun(getRunData({ ...wicketBowl, run }));
 
-      // allPlayers
-      // if batter on strike the rest this filed
-      const onStrikeBatter = state.onStrike === outBatter ? "" : state.onStrike;
+      const updatedDataWk = updateAllOversData(state, wicketBowl);
+
+      const updateCurrentBatters = updateAfterWicketFall(state, outBatter);
 
       return {
-        ...updatedDataW,
-        totalWicketFall: state.totalWicketFall + 1,
-        isInningsEnd: state.totalWicketFall + 1 === 10,
-        currentBatters,
-        onStrike: onStrikeBatter,
-        isGameOn: false,
+        ...updatedDataWk,
+        ...updateCurrentBatters,
       };
 
     case "setBatters":
       const newCurrentBatters = action.payload;
 
       // UPDATE LISTED PLAYERS
-      const updatePlyerList = [...state.allPlayers];
-      const alreadyListedPlayers = state.allPlayers.map((batter) => batter.id);
+      const updateBattersList = [...state.allBatters];
+      const alreadyListedBatters = state.allBatters.map((batter) => batter.id);
 
       newCurrentBatters.forEach((batter) => {
-        if (!alreadyListedPlayers.includes(batter.id)) {
-          updatePlyerList.push(batter);
+        if (!alreadyListedBatters.includes(batter.id)) {
+          updateBattersList.push(batter);
         }
       });
-      console.log(updatePlyerList);
       return {
         ...state,
         currentBatters: newCurrentBatters,
-        isGameOn: true,
-        allPlayers: updatePlyerList,
+        allBatters: updateBattersList,
       };
+
+    case "playStart":
+      return { ...state, isGameOn: true };
 
     case "setStriker":
       return { ...state, onStrike: action.payload };
+
+    case "setCurrentBowler":
+      const newBowler = action.payload;
+      const updatedBowlerList = [...state.allBowlers];
+      if (
+        state.allBowlers.filter((bowler) => bowler.id === newBowler.id)
+          .length === 0
+      )
+        updatedBowlerList.push(newBowler);
+      return {
+        ...state,
+        currentBowler: action.payload,
+        allBowlers: updatedBowlerList,
+      };
 
     default:
       throw new Error("Action unknown");
@@ -195,6 +298,7 @@ function InningsProvider({ children }) {
     .map((bowl) => (bowl.run ? bowl.run : 0))
     .reduce((cur, acc) => acc + cur, 0);
 
+  // NOTEME:
   console.log(allStates);
 
   return (

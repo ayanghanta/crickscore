@@ -1,5 +1,19 @@
 import uid from "tiny-uid";
 
+let MULTIPLIER;
+
+if (process.env.NODE_ENV === "development") MULTIPLIER = 2;
+if (process.env.NODE_ENV === "production") MULTIPLIER = 1;
+
+export function caclTotalRun(allOversData) {
+  const total = allOversData
+    .flat()
+    .map((bowl) => (bowl.run ? bowl.run : 0))
+    .reduce((cur, acc) => acc + cur, 0);
+
+  return total;
+}
+
 export function calcLegalDelivary(balls) {
   const totalLegalBalls = balls.filter((delivary) => delivary.isLegal);
 
@@ -81,6 +95,30 @@ export class Batter {
   scoreRun(run) {
     this.runs = [...this.runs, run];
   }
+  getRun() {
+    const totalRun =
+      this.runs.map((run) => run.run).reduce((cur, acc) => cur + acc, 0) /
+      MULTIPLIER;
+    return totalRun;
+  }
+
+  getTotalPlayedBall() {
+    const balls =
+      this.runs.filter((ball) => ball.isLegal).length / MULTIPLIER || 0;
+    return balls;
+  }
+  get4sCount() {
+    return this.runs.filter((ball) => ball.run === 4).length / MULTIPLIER || 0;
+  }
+  get6sCount() {
+    return this.runs.filter((ball) => ball.run === 6).length / MULTIPLIER || 0;
+  }
+
+  getStrikeRate() {
+    const sr = (this.getRun() * 100) / this.getTotalPlayedBall() || 0;
+
+    return sr.toFixed(2).padStart(5, "0");
+  }
 }
 
 export class Bowler {
@@ -92,4 +130,46 @@ export class Bowler {
   bowl(ball) {
     this.delivarys = [...this.delivarys, ball];
   }
+  calcOver() {
+    const totalBallBowl =
+      this.delivarys.filter((ball) => ball.isLegal).length / MULTIPLIER;
+
+    const fullOver = Math.trunc(totalBallBowl / 6);
+    const balls = totalBallBowl % 6;
+
+    const overBowl = +`${fullOver}.${balls}`;
+    return overBowl.toFixed(1);
+  }
+
+  calcRunConceded() {
+    const runs =
+      this.delivarys
+        .map((delivary) => delivary.run)
+        .reduce((cur, acc) => cur + acc, 0) / MULTIPLIER;
+
+    return runs;
+  }
+
+  calcTotalTake() {
+    const wicketCount =
+      this.delivarys.filter((delivary) => delivary.wicket === 1).length /
+      MULTIPLIER;
+
+    return wicketCount;
+  }
+
+  calcEnon() {
+    const totalBallBowl =
+      this.delivarys.filter((ball) => ball.isLegal).length / MULTIPLIER;
+    const runsConced =
+      this.delivarys
+        .map((delivary) => delivary.run)
+        .reduce((cur, acc) => cur + acc, 0) / MULTIPLIER;
+
+    const economy = (runsConced / totalBallBowl) * 6 || 0;
+
+    return economy.toFixed(2);
+  }
+
+  calcMaidenOver() {}
 }

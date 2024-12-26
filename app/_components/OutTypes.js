@@ -41,31 +41,41 @@ function OutTypes({ outHandler }) {
 
   return (
     <div>
-      <p>
-        {runBeforeOut} {runType === "byes" && "byes"} run + run out.
-      </p>
-      <div>
+      {/* <p>
+        {runBeforeOut} {runType === "byes" && "byes"} run + out.
+      </p> */}
+      <p className="font-semibold text-gray-700 text-lg mb-4">Out Type</p>
+      <div className="mb-6 grid grid-cols-3 gap-x-2 gap-y-2">
         {outTypesList.map((item) => (
-          <div key={item}>
-            <label htmlFor={item} className="capitalize">
-              {item.split("-").join(" ")}
-            </label>
+          <div key={item} className="flex items-center space-x-3">
             <input
               type="checkbox"
               id={item}
               checked={selectedOutType === item}
               onChange={() => handleChange(item)}
+              className="w-5 h-5 text-blue-500 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
             />
+            <label
+              htmlFor={item}
+              className="capitalize text-gray-700 font-medium cursor-pointer select-none"
+            >
+              {item.split("-").join(" ")}
+            </label>
           </div>
         ))}
       </div>
       {selectedOutType === "run-out" && (
         <div>
-          <div>
-            <label htmlFor="selectOutBatter">Out Batter:</label>
+          <div className="flex flex-col space-y-2 mb-6">
+            <label
+              htmlFor="selectOutBatter"
+              className="text-gray-700 font-medium"
+            >
+              Out Batter:
+            </label>
             <select
               id="selectOutBatter"
-              className="text-gray-700"
+              className="text-gray-700 bg-white border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               onChange={(e) => setSelectOutBatter(e.target.value)}
             >
               <option value="">Select batter</option>
@@ -76,24 +86,35 @@ function OutTypes({ outHandler }) {
               ))}
             </select>
           </div>
-          <p>Run before run out</p>
+
+          <p className="font-semibold text-gray-700 mb-2">Run before run out</p>
           <ByesCheck handler={setRunType} runType={runType} />
           <div className="flex gap-1">
-            <Button onClick={() => setRunBeforeOut(0)}>0</Button>
-            <Button onClick={() => setRunBeforeOut(1)}>1</Button>
-            <Button onClick={() => setRunBeforeOut(2)}>2</Button>
-            <Button onClick={() => setRunBeforeOut(3)}>3</Button>
+            <Button type="modalRun" onClick={() => setRunBeforeOut(0)}>
+              0
+            </Button>
+            <Button type="modalRun" onClick={() => setRunBeforeOut(1)}>
+              1
+            </Button>
+            <Button type="modalRun" onClick={() => setRunBeforeOut(2)}>
+              2
+            </Button>
+            <Button type="modalRun" onClick={() => setRunBeforeOut(3)}>
+              3
+            </Button>
           </div>
         </div>
       )}
-      {!!selectedOutType && (
-        <button
-          className="bg-red-600 text-gray-50 py-1 px-2"
-          onClick={handleOut}
-        >
-          OUT
-        </button>
-      )}
+      <div className="text-center">
+        {!!selectedOutType && (
+          <button
+            className="bg-red-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-red-700 transition duration-200 mt-10"
+            onClick={handleOut}
+          >
+            ☝️ OUT
+          </button>
+        )}
+      </div>
     </div>
   );
 }

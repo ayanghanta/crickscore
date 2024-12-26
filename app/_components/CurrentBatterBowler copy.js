@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useInnings } from "../_context/InningsContext";
 import { Batter, Bowler } from "../_lib/ulits";
 import DisplayBowleroptions from "./DisplayBowleroptions";
-import { useStart2ndInnings } from "./_hooks/useStart2ndinnings";
 
 function CurrentBatterBowler() {
   const {
@@ -19,7 +18,6 @@ function CurrentBatterBowler() {
   const [batterName2, setBatterName2] = useState(currentBatters[1].name || "");
   const [bowlerName, setBowlerName] = useState(currentBowler.name || "");
   const [selectedBowler, setSelectedBowler] = useState("");
-  const { start2ndinnings } = useStart2ndInnings();
 
   useEffect(
     function () {
@@ -80,81 +78,62 @@ function CurrentBatterBowler() {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-8 items-start mb-12 md:w-6/12 mx-auto">
-      <div className="space-y-2">
-        <p className="text-lg font-medium text-gray-700 mb-2">Batters</p>
-        <div className="flex items-center space-x-4">
+    <div className="grid grid-cols-2">
+      <div>
+        <div>
           <input
             type="checkbox"
             checked={onStrike === 0}
             onChange={() => handleSetStriker(0)}
-            className="h-5 w-5 text-indigo-600 bg-gray-200 border-2 border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:outline-none transition duration-200 ease-in-out cursor-pointer"
           />
           <input
             type="text"
             value={batterName1}
             onChange={(e) => setBatterName1(e.target.value)}
-            className={`w-full p-2 border border-gray-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed`}
+            className="text-gray-700"
             disabled={isGameOn && (isGameOn || !batterName1)}
-            placeholder="Enter Batter 1"
           />
         </div>
-
-        <div className="flex items-center space-x-4">
+        <div>
           <input
             type="checkbox"
             checked={onStrike === 1}
             onChange={() => handleSetStriker(1)}
-            className="h-5 w-5 text-indigo-600 bg-gray-200 border-2 border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:outline-none transition duration-200 ease-in-out cursor-pointer"
           />
           <input
             type="text"
             value={batterName2}
             onChange={(e) => setBatterName2(e.target.value)}
-            className={`w-full p-2 border border-gray-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed`}
             disabled={isGameOn && (isGameOn || !batterName2)}
-            placeholder="Enter Batter 2"
+            className="text-gray-700"
           />
         </div>
       </div>
 
       <div>
-        <p className="text-lg font-medium text-gray-700 mb-2">Bowler</p>
-        <div className="relative">
+        <p>Bowler: </p>
+        <div className="w-48">
           <input
             type="text"
             disabled={!isNewOver || isGameOn}
             value={bowlerName}
+            className="text-gray-700 w-full"
             onChange={(e) => handleBowlerName(e.target.value)}
-            className={`w-full p-2 border ${
-              !isNewOver || isGameOn
-                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                : "border-gray-300 text-gray-700"
-            } rounded focus:outline-none focus:ring-2 focus:ring-indigo-600`}
-            placeholder="Enter Bowler Name"
           />
           {!isGameOn && bowlerName && isNewOver && (
-            <div className="absolute top-12 left-0 bg-white border border-gray-200 shadow-lg rounded w-full z-10">
-              <DisplayBowleroptions
-                handleSelect={handleSelectExistingBowler}
-                bowlerList={allBowlers}
-              />
-            </div>
+            <DisplayBowleroptions
+              handleSelect={handleSelectExistingBowler}
+              bowlerList={allBowlers}
+            />
           )}
         </div>
       </div>
-      {isInningsEnd && (
-        <button
-          className="bg-green-600 text-white font-bold py-2 px-4 rounded-sm hover:bg-green-700 transition-all duration-300 col-span-2 shadow-md"
-          onClick={start2ndinnings}
-        >
-          Start 2nd Innings
-        </button>
-      )}
+
+      {isInningsEnd && <button></button>}
 
       {!isGameOn && !isInningsEnd && (
         <button
-          className="bg-indigo-500 text-white py-2 font-bold rounded-sm hover:bg-indigo-600 transition duration-300"
+          className="bg-amber-200 text-gray-700"
           onClick={handleOnFiledBatterAndBowler}
         >
           Start Play

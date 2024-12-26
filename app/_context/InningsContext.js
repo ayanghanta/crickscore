@@ -8,6 +8,7 @@ import {
   Batter,
   Bowler,
   getRunData,
+  caclTotalRun,
 } from "../_lib/ulits";
 
 const InningsContext = createContext();
@@ -52,12 +53,13 @@ const initialState = {
   allBowlers: [new Bowler("sapnil"), new Bowler("Bolt")],
   allBatters: [],
   totalWicketFall: 0,
-  isInningsEnd: false,
-  totalOver: 5,
+  totalOver: 1,
   over: 0,
   isNewOver: true,
   isFreeHit: false,
   isGameOn: false,
+  targetToWin: "",
+  isInningsEnd: false,
 };
 
 function updateAllOversData(state, bowl) {
@@ -92,6 +94,8 @@ function updateAllOversData(state, bowl) {
     isOverEnd
   );
 
+  console.log(updateOver >= state.totalOver);
+
   return {
     ...state,
     currentOver: updatedOver,
@@ -116,11 +120,12 @@ function updateAfterWicketFall(state, outBatter) {
   // if batter on strike the rest this filed
   const onStrikeBatter = state.onStrike === outBatter ? "" : state.onStrike;
 
+  console.log(state.over, state.totalOver);
   return {
     currentBatters,
     onStrike: onStrikeBatter,
     totalWicketFall: state.totalWicketFall + 1,
-    isInningsEnd: state.totalWicketFall + 1 === 10,
+    isInningsEnd: state.isInningsEnd || state.totalWicketFall + 1 === 10,
     isGameOn: false,
   };
 }
@@ -164,7 +169,10 @@ function reducer(state, action) {
 
       const updatedDataAfterWide = updateAllOversData(state, wideBall);
       const updateCurrentBattersW = isOut
-        ? updateAfterWicketFall(state, outBatterInWideBall)
+        ? updateAfterWicketFall(
+            { ...state, ...updatedDataAfterWide },
+            outBatterInWideBall
+          )
         : {};
 
       return { ...updatedDataAfterWide, ...updateCurrentBattersW };
@@ -195,21 +203,12 @@ function reducer(state, action) {
         noBall = noBall.wicketFall(totalRunN, outBatterInNoball, outTypeN);
       }
 
-      // if (isOut && outType === "stumps") {
-      //   wideBall = wideBall.wicketFall(totalRunW, outBatterInWideBall, outType);
-      //   bowlerW.bowl(getRunData(wideBall));
-      // } else {
-      //   bowlerW.bowl(getRunData(wideBall));
-      // }
-
-      // const updatedDataAfterWide = updateAllOversData(state, wideBall);
-      // const updateCurrentBattersW = isOut
-      //   ? updateAfterWicketFall(state, outBatterInWideBall)
-      //   : {};
-
       const updatedDataAfterNo = updateAllOversData(state, noBall);
       const updateCurrentBattersN = isOutInNoBall
-        ? updateAfterWicketFall(state, outBatterInNoball)
+        ? updateAfterWicketFall(
+            { ...state, ...updatedDataAfterNo },
+            outBatterInNoball
+          )
         : {};
 
       return { ...updatedDataAfterNo, ...updateCurrentBattersN };
@@ -236,7 +235,10 @@ function reducer(state, action) {
 
       const updatedDataWk = updateAllOversData(state, wicketBowl);
 
-      const updateCurrentBatters = updateAfterWicketFall(state, outBatter);
+      const updateCurrentBatters = updateAfterWicketFall(
+        { ...state, ...updatedDataWk },
+        outBatter
+      );
 
       return {
         ...updatedDataWk,
@@ -280,6 +282,14 @@ function reducer(state, action) {
         currentBowler: action.payload,
         allBowlers: updatedBowlerList,
       };
+    case "setTotalOver":
+      return { ...state, totalOver: action.payload };
+
+    case "1stInningsReset":
+      const { totalOver, allOvers } = state;
+      const targetToWin = caclTotalRun(allOvers);
+
+      return { ...initialState, totalOver, targetToWin };
 
     default:
       throw new Error("Action unknown");
@@ -293,13 +303,10 @@ function InningsProvider({ children }) {
     return { run: bowl.run, type: bowl.type };
   });
 
-  const totalScore = allStates.allOvers
-    .flat()
-    .map((bowl) => (bowl.run ? bowl.run : 0))
-    .reduce((cur, acc) => acc + cur, 0);
+  const totalScore = caclTotalRun(allStates.allOvers);
 
   // NOTEME:
-  console.log(allStates);
+  console.log("☄️☄️", allStates);
 
   return (
     <InningsContext.Provider

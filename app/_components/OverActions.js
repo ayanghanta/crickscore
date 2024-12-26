@@ -3,6 +3,7 @@ import { useInnings } from "../_context/InningsContext";
 import Button from "./Button";
 import OutTypes from "./OutTypes";
 import ExtrasActions from "./ExtrasActions";
+import Modal from "./ui/Modal";
 
 function OverActions() {
   const [fallWicket, setFallWicket] = useState(false);
@@ -73,41 +74,59 @@ function OverActions() {
   return (
     <div>
       {isFreeHit && <p>FREE HIT 💥</p>}
+      <Modal>
+        <div className="grid grid-cols-5 border border-gray-200 py-6 px-4 gap-x-2 gap-y-2 md:w-4/5 mx-auto">
+          <Button onClick={() => scoreValidRun(0)}>0</Button>
+          <Button onClick={() => scoreValidRun(1)}>1</Button>
+          <Button onClick={() => scoreValidRun(2)}>2</Button>
 
-      <div className="flex gap-2">
-        <Button onClick={() => scoreValidRun(0)}>0</Button>
-        <Button onClick={() => scoreValidRun(1)}>1</Button>
-        <Button onClick={() => scoreValidRun(2)}>2</Button>
-        <Button onClick={() => scoreValidRun(3)}>3</Button>
-        <Button onClick={() => scoreValidRun(4)}>4</Button>
-        <Button onClick={() => scoreValidRun(6)}>6</Button>
-        <div className="border border-white p-1 space-x-1">
-          <Button onClick={() => handleWideBall(1)}>Wide</Button>
-          <span
-            className="px-1 border border-gray-400 cursor-pointer"
-            onClick={() => setExtraAction("wide")}
-          >
-            +
-          </span>
+          <div className="border border-gray-200 p-1 space-x-1 grid grid-cols-[8fr_2fr]">
+            <Button onClick={() => handleWideBall(1)}>Wide</Button>
+            <Modal.Button id="wide">
+              <Button>+</Button>
+            </Modal.Button>
+          </div>
+
+          <Modal.Button id="wicket">
+            <p className="bg-red-400 text-white hover:bg-red-500 space-x-2 px-2 py-1 transition duration-200 font-bold text-lg row-span-2 flex items-center justify-center cursor-pointer">
+              <span>WICKET</span>
+            </p>
+          </Modal.Button>
+
+          <Button onClick={() => scoreValidRun(3)}>3</Button>
+          <Button onClick={() => scoreValidRun(4)}>4</Button>
+          <Button onClick={() => scoreValidRun(6)}>6</Button>
+
+          <div className="border border-gray-200 p-1 space-x-1 grid grid-cols-[8fr_2fr]">
+            <Button onClick={() => handleNoBall(1)}>NO</Button>
+
+            <Modal.Button id="no">
+              <Button>+</Button>
+            </Modal.Button>
+          </div>
         </div>
-        <div className="border border-white p-1 space-x-1">
-          <Button onClick={() => handleNoBall(1)}>NO</Button>
-          <span
-            className="px-1 border border-gray-400 cursor-pointer"
-            onClick={() => setExtraAction("no")}
-          >
-            +
-          </span>
-        </div>
-        <Button onClick={() => setFallWicket(true)}>WICKET</Button>
-      </div>
-      {fallWicket && <OutTypes outHandler={handleWicketFall} />}
-      {extraAction && (
-        <ExtrasActions
-          bowlType={extraAction}
-          handleHide={() => setExtraAction("")}
-        />
-      )}
+        <Modal.Window id="wicket">
+          <OutTypes outHandler={handleWicketFall} />
+        </Modal.Window>
+
+        <Modal.Window id="wide">
+          <ExtrasActions
+            bowlType="wide"
+            handleHide={() => setExtraAction("")}
+          />
+        </Modal.Window>
+
+        <Modal.Window id="no">
+          <ExtrasActions bowlType="no" handleHide={() => setExtraAction("")} />
+        </Modal.Window>
+
+        {/* {extraAction && (
+          <ExtrasActions
+            bowlType={extraAction}
+            handleHide={() => setExtraAction("")}
+          />
+        )} */}
+      </Modal>
     </div>
   );
 }

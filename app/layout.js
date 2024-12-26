@@ -1,6 +1,9 @@
 import "@/app/_styles/globals.css";
 import { MatchProvider } from "./_context/MatchContext";
 import { ScoreBoardProvider } from "./_context/ScoreBoardContext";
+import Header from "./_components/ui/Header";
+import Footer from "./_components/ui/Footer";
+import { InningsProvider } from "./_context/InningsContext";
 
 export const metadata = {
   title: {
@@ -14,12 +17,15 @@ export const metadata = {
 function Layout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className="grid grid-rows-[auto_1fr_auto] min-h-dvh">
         <MatchProvider>
           <ScoreBoardProvider>
-            <header></header>
-            <main>{children}</main>
-            <footer></footer>
+            <InningsProvider>
+              <Header />
+
+              <main>{children}</main>
+              <Footer />
+            </InningsProvider>
           </ScoreBoardProvider>
         </MatchProvider>
       </body>

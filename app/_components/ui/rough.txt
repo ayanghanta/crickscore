@@ -1,0 +1,2 @@
+bg-gray-900
+bg-gray-400

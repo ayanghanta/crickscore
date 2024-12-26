@@ -1,6 +1,5 @@
 import MatchDetails from "../_components/MatchDetails";
 import ScoreCard from "../_components/ScoreCard";
-import { InningsProvider } from "../_context/InningsContext";
 
 export const metadata = {
   title: "score board",
@@ -8,13 +7,10 @@ export const metadata = {
 
 function page() {
   return (
-    <InningsProvider>
-      <div>
-        <h1>Score board</h1>
-        <MatchDetails />
-        <ScoreCard />
-      </div>
-    </InningsProvider>
+    <div className="max-w-[1300px] mx-auto px-3">
+      <MatchDetails />
+      <ScoreCard />
+    </div>
   );
 }
 

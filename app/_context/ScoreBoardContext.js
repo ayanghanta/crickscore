@@ -12,6 +12,7 @@ const initalState = {
   currentlyBattingTeam: "RCB",
   firstInningTotal: 0,
   secondInningsTotal: 0,
+  winTeam: "",
 };
 
 function reducer(state, action) {
@@ -29,6 +30,9 @@ function reducer(state, action) {
       return { ...state, currentlyBattingTeam: action.payload };
     case "setCurrentInnings":
       return { ...state, currentInnings: action.payload };
+
+    case "setWinner":
+      return { ...state, matchEnd: true, winTeam: action.payload };
 
     default:
       throw new Error("Action unknown");

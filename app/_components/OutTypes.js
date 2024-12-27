@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useInnings } from "../_context/InningsContext";
 import Button from "./Button";
 import ByesCheck from "./ByesCheck";
@@ -11,8 +11,9 @@ const outTypesList = [
   "hit-wicket",
   "run-out",
 ];
+const strikerOut = ["bold", "lbw", "catch", "stumps", "hit-wicket"];
 
-function OutTypes({ outHandler }) {
+function OutTypes({ outHandler, handelCloseModal }) {
   const [selectOutBatter, setSelectOutBatter] = useState(""); // store selected out batter id
   const [selectedOutType, setSelectedOutType] = useState("");
   const [runBeforeOut, setRunBeforeOut] = useState(0);
@@ -25,11 +26,19 @@ function OutTypes({ outHandler }) {
     setSelectedOutType(type);
   }
 
+  useEffect(
+    function () {
+      if (strikerOut.includes(selectedOutType)) setRunBeforeOut(0);
+    },
+    [selectedOutType]
+  );
+
   function handleOut() {
-    const strikerOut = ["bold", "lbw", "catch", "stumps", "hit-wicket"];
     let outBatter;
-    if (strikerOut.includes(selectedOutType)) outBatter = onStrikeBatter;
-    else {
+    if (strikerOut.includes(selectedOutType)) {
+      outBatter = onStrikeBatter;
+      setRunBeforeOut(0);
+    } else {
       if (!selectOutBatter) return;
       outBatter = currentBatters
         .filter((batter) => batter.id === selectOutBatter)
@@ -37,13 +46,16 @@ function OutTypes({ outHandler }) {
     }
 
     outHandler(selectedOutType, outBatter, runBeforeOut, runType !== "run");
+    handelCloseModal();
   }
 
   return (
     <div>
-      {/* <p>
-        {runBeforeOut} {runType === "byes" && "byes"} run + out.
-      </p> */}
+      <p className="text-lg font-semibold text-indigo-400 mb-6 text-center md:text-left">
+        {runBeforeOut > 0 &&
+          `${runBeforeOut} ${runType === "byes" ? "byes" : ""} run +`}
+        {selectedOutType && `${selectedOutType} Out`}
+      </p>
       <p className="font-semibold text-gray-700 text-lg mb-4">Out Type</p>
       <div className="mb-6 grid grid-cols-3 gap-x-2 gap-y-2">
         {outTypesList.map((item) => (

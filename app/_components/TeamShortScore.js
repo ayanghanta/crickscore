@@ -22,13 +22,13 @@ function TeamShortScore({ teamName }) {
     if (currentInnings === 1) isBatYet = false;
     if (currentInnings === 2) {
       teamScore = firstInningTotal;
-      totalWicket = firstInningsData.totalOver || 0;
+      totalWicket = firstInningsData.totalWicketFall || 0;
       overComplete = firstInningsData.over;
     }
   }
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center text-xl">
       {isBatYet ? (
         <>
           <p>

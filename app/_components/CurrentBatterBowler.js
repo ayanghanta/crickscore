@@ -3,6 +3,7 @@ import { useInnings } from "../_context/InningsContext";
 import { Batter, Bowler } from "../_lib/ulits";
 import DisplayBowleroptions from "./DisplayBowleroptions";
 import { useStart2ndInnings } from "./_hooks/useStart2ndinnings";
+import { useScoreBoard } from "../_context/ScoreBoardContext";
 
 function CurrentBatterBowler() {
   const {
@@ -20,6 +21,7 @@ function CurrentBatterBowler() {
   const [bowlerName, setBowlerName] = useState(currentBowler.name || "");
   const [selectedBowler, setSelectedBowler] = useState("");
   const { start2ndinnings } = useStart2ndInnings();
+  const { currentInnings } = useScoreBoard();
 
   useEffect(
     function () {
@@ -143,7 +145,7 @@ function CurrentBatterBowler() {
           )}
         </div>
       </div>
-      {isInningsEnd && (
+      {isInningsEnd && currentInnings === 1 && (
         <button
           className="bg-green-600 text-white font-bold py-2 px-4 rounded-sm hover:bg-green-700 transition-all duration-300 col-span-2 shadow-md"
           onClick={start2ndinnings}

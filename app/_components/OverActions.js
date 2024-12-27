@@ -16,8 +16,6 @@ function OverActions() {
     currentBowler,
   } = useInnings();
 
-  const [extraAction, setExtraAction] = useState("");
-
   function scoreValidRun(run) {
     // dispatch({ type: "scoreRun", payload: run });
     dispatch({
@@ -110,22 +108,12 @@ function OverActions() {
         </Modal.Window>
 
         <Modal.Window id="wide">
-          <ExtrasActions
-            bowlType="wide"
-            handleHide={() => setExtraAction("")}
-          />
+          <ExtrasActions bowlType="wide" />
         </Modal.Window>
 
         <Modal.Window id="no">
-          <ExtrasActions bowlType="no" handleHide={() => setExtraAction("")} />
+          <ExtrasActions bowlType="no" />
         </Modal.Window>
-
-        {/* {extraAction && (
-          <ExtrasActions
-            bowlType={extraAction}
-            handleHide={() => setExtraAction("")}
-          />
-        )} */}
       </Modal>
     </div>
   );

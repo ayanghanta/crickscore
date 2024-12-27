@@ -42,6 +42,7 @@ const state = {
 };
 */
 const initialState = {
+  innings: 1,
   // allOvers: [[]],
   allOvers: [],
   currentOver: [],
@@ -60,6 +61,8 @@ const initialState = {
   isGameOn: false,
   targetToWin: "",
   isInningsEnd: false,
+  matchEnd: false,
+  winningTeam: "",
 };
 
 function updateAllOversData(state, bowl) {
@@ -94,7 +97,12 @@ function updateAllOversData(state, bowl) {
     isOverEnd
   );
 
-  console.log(updateOver >= state.totalOver);
+  let isMatchEnd = state.matchEnd;
+  if (state.innings === 2 && !state.matchEnd) {
+    isMatchEnd =
+      updateOver >= state.totalOver ||
+      caclTotalRun(updatedAllOvers) > state.targetToWin;
+  }
 
   return {
     ...state,
@@ -107,6 +115,7 @@ function updateAllOversData(state, bowl) {
     onStrike,
     currentBowler: isOverEnd ? {} : state.currentBowler,
     isGameOn: !isOverEnd,
+    matchEnd: isMatchEnd,
   };
 }
 
@@ -120,13 +129,17 @@ function updateAfterWicketFall(state, outBatter) {
   // if batter on strike the rest this filed
   const onStrikeBatter = state.onStrike === outBatter ? "" : state.onStrike;
 
-  console.log(state.over, state.totalOver);
+  let isMatchEnd = state.matchEnd;
+  if (state.innings === 2 && !state.matchEnd)
+    isMatchEnd = state.isInningsEnd || state.totalWicketFall + 1 === 10;
+
   return {
     currentBatters,
     onStrike: onStrikeBatter,
     totalWicketFall: state.totalWicketFall + 1,
     isInningsEnd: state.isInningsEnd || state.totalWicketFall + 1 === 10,
     isGameOn: false,
+    matchEnd: isMatchEnd,
   };
 }
 
@@ -289,7 +302,7 @@ function reducer(state, action) {
       const { totalOver, allOvers } = state;
       const targetToWin = caclTotalRun(allOvers);
 
-      return { ...initialState, totalOver, targetToWin };
+      return { ...initialState, totalOver, targetToWin, innings: 2 };
 
     default:
       throw new Error("Action unknown");
@@ -306,7 +319,7 @@ function InningsProvider({ children }) {
   const totalScore = caclTotalRun(allStates.allOvers);
 
   // NOTEME:
-  console.log("☄️☄️", allStates);
+  // console.log("☄️☄️", allStates);
 
   return (
     <InningsContext.Provider

@@ -4,7 +4,7 @@ import { useInnings } from "../_context/InningsContext";
 import ByesCheck from "./ByesCheck";
 import RunoutType from "./RunoutType";
 
-function ExtrasActions({ bowlType, handleHide }) {
+function ExtrasActions({ bowlType, handelCloseModal }) {
   const {
     dispatch,
     isFreeHit,
@@ -59,7 +59,7 @@ function ExtrasActions({ bowlType, handleHide }) {
       dispatch({ type: "bowlNoBall", payload });
     }
 
-    handleHide();
+    handelCloseModal();
   }
 
   return (

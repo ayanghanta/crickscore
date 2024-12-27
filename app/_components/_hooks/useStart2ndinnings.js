@@ -20,7 +20,6 @@ export function useStart2ndInnings() {
 
   // SEAVE THE FIRST INNING DATA
   function start2ndinnings() {
-    console.log("hello");
     dispatch({
       type: "saveFirstInningsData",
       payload: {

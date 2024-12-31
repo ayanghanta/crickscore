@@ -9,7 +9,7 @@ function MatchDetails() {
   const [showDetails, setShowDetails] = useState(false);
 
   return (
-    <div className="relative">
+    <div className="relative z-999">
       <IoAlertCircleOutline
         className="text-xl text-gray-500 cursor-pointer hover:text-gray-700"
         onMouseEnter={() => setShowDetails(true)}

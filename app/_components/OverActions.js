@@ -71,7 +71,11 @@ function OverActions() {
 
   return (
     <div>
-      {isFreeHit && <p>FREE HIT 💥</p>}
+      {isFreeHit && (
+        <p className="w-4/5 mx-auto bg-amber-400 font-bold text-center text-red-500 py-1.5">
+          FREE HIT 💥
+        </p>
+      )}
       <Modal>
         <div className="grid grid-cols-5 border border-gray-200 py-6 px-4 gap-x-2 gap-y-2 md:w-4/5 mx-auto">
           <Button onClick={() => scoreValidRun(0)}>0</Button>

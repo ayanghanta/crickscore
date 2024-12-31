@@ -5,11 +5,15 @@ const MatchContext = createContext();
 
 const initalState = {
   teams: {
-    team1: "RCB",
-    team2: "KKR",
+    // team1: "RCB",
+    // team2: "KKR",
+    team1: "",
+    team2: "",
   },
-  totalOvers: "5",
-  battingFirstTeam: "RCB",
+  // totalOvers: "5",
+  totalOvers: "",
+  battingFirstTeam: "",
+  // battingFirstTeam: "RCB",
   mathWon: "",
   innings: 1,
 };

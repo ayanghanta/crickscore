@@ -17,7 +17,7 @@ function OutTypes({ outHandler, handelCloseModal }) {
   const [selectOutBatter, setSelectOutBatter] = useState(""); // store selected out batter id
   const [selectedOutType, setSelectedOutType] = useState("");
   const [runBeforeOut, setRunBeforeOut] = useState(0);
-  const { currentBatters, onStrike } = useInnings();
+  const { currentBatters, onStrike, isFreeHit } = useInnings();
   const [runType, setRunType] = useState("run");
   const onStrikeBatter = currentBatters[onStrike];
   const nonStrikerBatter = currentBatters[onStrike === 0 ? 1 : 0];
@@ -49,6 +49,9 @@ function OutTypes({ outHandler, handelCloseModal }) {
     handelCloseModal();
   }
 
+  let finalOutTypeList = outTypesList;
+  if (isFreeHit) finalOutTypeList = ["run-out"];
+
   return (
     <div>
       <p className="text-lg font-semibold text-indigo-400 mb-6 text-center md:text-left">
@@ -58,7 +61,7 @@ function OutTypes({ outHandler, handelCloseModal }) {
       </p>
       <p className="font-semibold text-gray-700 text-lg mb-4">Out Type</p>
       <div className="mb-6 grid grid-cols-3 gap-x-2 gap-y-2">
-        {outTypesList.map((item) => (
+        {finalOutTypeList.map((item) => (
           <div key={item} className="flex items-center space-x-3">
             <input
               type="checkbox"

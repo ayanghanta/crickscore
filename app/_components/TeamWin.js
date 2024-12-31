@@ -22,7 +22,7 @@ function TeamWin() {
       winBy = `win by ${10 - totalWicketFall} wickets`;
     } else if (totalScore < targetToWin) {
       winningTeam = battingFirstTeam;
-      winBy = `w by ${targetToWin - totalScore} runs`;
+      winBy = `win by ${targetToWin - totalScore} runs`;
     } else if (totalScore === targetToWin) {
       winningTeam = "DRAW";
       winBy = `Match Draw`;
@@ -33,7 +33,7 @@ function TeamWin() {
 
     if (winningTeam !== "DRAW") {
       confetti({
-        particleCount: 300,
+        particleCount: 100,
         angle: 90,
         spread: 90,
         origin: { x: 0.5, y: 0.5 },
@@ -80,7 +80,7 @@ function TeamWin() {
   if (!matchEnd) return null;
 
   return (
-    <div className="w-6/12 mx-auto flex flex-col items-center text-lg font-semibold text-indigo-600 mb-36">
+    <div className="w-6/12 mx-auto flex flex-col items-center text-lg font-semibold text-green-600 mb-24 bg-white ">
       <p>
         {winTeam} {winText.toUpperCase()}
       </p>

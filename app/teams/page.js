@@ -1,5 +1,9 @@
 import TeamsForm from "../_components/TeamsForm";
 
+export const metadata = {
+  title: "Teams",
+};
+
 function page() {
   return (
     <div>

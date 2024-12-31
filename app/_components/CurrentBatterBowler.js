@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useInnings } from "../_context/InningsContext";
 import { Batter, Bowler } from "../_lib/ulits";
 import DisplayBowleroptions from "./DisplayBowleroptions";
-import { useStart2ndInnings } from "./_hooks/useStart2ndinnings";
+import { useStart2ndInnings } from "../_hooks/useStart2ndinnings";
 import { useScoreBoard } from "../_context/ScoreBoardContext";
 
 function CurrentBatterBowler() {
@@ -96,10 +96,17 @@ function CurrentBatterBowler() {
             type="text"
             value={batterName1}
             onChange={(e) => setBatterName1(e.target.value)}
-            className={`w-full p-2 border border-gray-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed`}
+            className={`w-full px-2 py-0.5 border border-gray-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed`}
             disabled={isGameOn && (isGameOn || !batterName1)}
             placeholder="Enter Batter 1"
           />
+
+          {currentBatters[0].name && (
+            <div className="whitespace-nowrap">
+              {currentBatters[0]?.getRun()}* (
+              {currentBatters[0]?.getTotalPlayedBall()})
+            </div>
+          )}
         </div>
 
         <div className="flex items-center space-x-4">
@@ -113,30 +120,45 @@ function CurrentBatterBowler() {
             type="text"
             value={batterName2}
             onChange={(e) => setBatterName2(e.target.value)}
-            className={`w-full p-2 border border-gray-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed`}
+            className={`w-full px-2 py-0.5 border border-gray-300 text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-indigo-600 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed`}
             disabled={isGameOn && (isGameOn || !batterName2)}
             placeholder="Enter Batter 2"
           />
+          {currentBatters[1].name && (
+            <div className="whitespace-nowrap">
+              {currentBatters[1]?.getRun()}* (
+              {currentBatters[1]?.getTotalPlayedBall()})
+            </div>
+          )}
         </div>
       </div>
 
       <div>
         <p className="text-lg font-medium text-gray-700 mb-2">Bowler</p>
         <div className="relative">
-          <input
-            type="text"
-            disabled={!isNewOver || isGameOn}
-            value={bowlerName}
-            onChange={(e) => handleBowlerName(e.target.value)}
-            className={`w-full p-2 border ${
-              !isNewOver || isGameOn
-                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                : "border-gray-300 text-gray-700"
-            } rounded focus:outline-none focus:ring-2 focus:ring-indigo-600`}
-            placeholder="Enter Bowler Name"
-          />
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              disabled={!isNewOver || isGameOn}
+              value={bowlerName}
+              onChange={(e) => handleBowlerName(e.target.value)}
+              className={`w-full px-2 py-0.5 border ${
+                !isNewOver || isGameOn
+                  ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                  : "border-gray-300 text-gray-700"
+              } rounded focus:outline-none focus:ring-2 focus:ring-indigo-600`}
+              placeholder="Enter Bowler Name"
+            />
+            {currentBowler.name && (
+              <div className="whitespace-nowrap">
+                {currentBowler.calcTotalTake()}/
+                {currentBowler.calcRunConceded()} ({currentBowler.calcOver()})
+              </div>
+            )}
+          </div>
+
           {!isGameOn && bowlerName && isNewOver && (
-            <div className="absolute top-12 left-0 bg-white border border-gray-200 shadow-lg rounded w-full z-10">
+            <div className="absolute top-12 left-0 bg-gray-50 border border-gray-200 shadow-lg rounded w-full z-10">
               <DisplayBowleroptions
                 handleSelect={handleSelectExistingBowler}
                 bowlerList={allBowlers}

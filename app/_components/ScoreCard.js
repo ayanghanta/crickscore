@@ -7,7 +7,6 @@ import InningsCard from "./InningsCard";
 import OverActions from "./OverActions";
 import ShortSummary from "./ShortSummary";
 import TeamScore from "./TeamScore";
-import TeamWin from "./TeamWin";
 
 function ScoreCard() {
   const { matchEnd } = useInnings();
@@ -15,7 +14,7 @@ function ScoreCard() {
     <div>
       <InningEnd />
       <TeamScore />
-      <TeamWin />
+
       {!matchEnd && (
         <>
           <CurrentBatterBowler />

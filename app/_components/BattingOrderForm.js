@@ -7,8 +7,8 @@ import { useScoreBoard } from "../_context/ScoreBoardContext";
 import Button from "./Button";
 
 function BattingOrderForm() {
-  const [selectedTeam, setSelectedTeam] = useState(null);
-  const { dispatch, teams, totalOvers } = useMatchContext();
+  const { dispatch, teams, totalOvers, battingFirstTeam } = useMatchContext();
+  const [selectedTeam, setSelectedTeam] = useState(battingFirstTeam || null);
   const { dispatch: scoreBoardDispatch } = useScoreBoard();
 
   const router = useRouter();

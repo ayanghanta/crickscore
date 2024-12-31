@@ -6,25 +6,25 @@ function page() {
     <div>
       <section className="text-center relative">
         <Image
-          src="/hero-1.jpg"
+          src="/hero-2.jpg"
           alt="criker match image for the over photo of this application"
           fill
-          className="object-cover object-center z-1"
+          className="object-cover object-bottom z-1"
         />
-        <div className="relative z-10 pt-24 pb-32 px-3">
+        <div className="relative z-10 pt-24 pb-52 px-3">
           <h1 className="text-4xl font-bold text-gray-200 mb-4 ">
             Your Ultimate Cricket Scoreboard Simulator
           </h1>
           <p className="text-lg text-gray-200 mb-16">
             Simulate a full cricket match, manage scores, players, and more with
-            Scorely.
+            CricScore.
           </p>
           <Button href="/teams" type="primary">
             Let&apos; play &rarr;
           </Button>
         </div>
       </section>
-      <section className="py-24 bg-indigo-50 px-3">
+      <section className="py-24 bg-green-50 px-3">
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-700">
           Features You&apos;ll Love!😎
         </h2>

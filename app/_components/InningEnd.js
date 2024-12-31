@@ -4,7 +4,7 @@ import { useScoreBoard } from "../_context/ScoreBoardContext";
 import Button from "./Button";
 import { IoCloseOutline } from "react-icons/io5";
 import TeamScore from "./TeamScore";
-import { useStart2ndInnings } from "./_hooks/useStart2ndinnings";
+import { useStart2ndInnings } from "../_hooks/useStart2ndinnings";
 
 function InningEnd() {
   const [modal, setModal] = useState(true);
@@ -29,7 +29,7 @@ function InningEnd() {
               End of the First Innings
             </p>
 
-            <TeamScore />
+            <TeamScore isPrimary={false} />
             <div className="flex gap-4 justify-end mt-8">
               <Button type="modalPrimary" onClick={start2ndinnings}>
                 Start 2nd Innings

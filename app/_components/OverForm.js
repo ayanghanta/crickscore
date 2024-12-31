@@ -7,9 +7,9 @@ import Button from "./Button";
 import { useInnings } from "../_context/InningsContext";
 
 function OverForm() {
-  const [over, setOver] = useState(0);
+  const { dispatch, teams, totalOvers } = useMatchContext();
+  const [over, setOver] = useState(totalOvers || 0);
   const router = useRouter();
-  const { dispatch, teams } = useMatchContext();
   const { dispatch: inningsDispatch } = useInnings();
 
   function handleSubmit(e) {
@@ -55,7 +55,7 @@ function OverForm() {
               type="number"
               min={1}
               id="over"
-              className="w-full p-4 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              className="w-full p-4 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
               value={over}
               onChange={(e) => setOver(+e.target.value)}
               placeholder="Enter number of overs"
@@ -66,7 +66,7 @@ function OverForm() {
             <Button
               type="next"
               role="submit"
-              className="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-all"
+              className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-all"
             >
               Next
             </Button>

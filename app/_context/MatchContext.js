@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useContext, useReducer, useRef } from "react";
 
 const MatchContext = createContext();
 
@@ -38,9 +38,19 @@ function MatchProvider({ children }) {
     reducer,
     initalState
   );
+  const scoreboardRef = useRef(null);
+  const inningsCardRef = useRef(null);
+
   return (
     <MatchContext.Provider
-      value={{ teams, totalOvers, battingFirstTeam, dispatch }}
+      value={{
+        teams,
+        totalOvers,
+        battingFirstTeam,
+        scoreboardRef,
+        inningsCardRef,
+        dispatch,
+      }}
     >
       {children}
     </MatchContext.Provider>

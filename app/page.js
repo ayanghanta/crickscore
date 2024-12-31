@@ -20,7 +20,7 @@ function page() {
             CricSnap.
           </p>
           <Button href="/teams" type="primary">
-            Let&apos; play &rarr;
+            Let&apos;s play &rarr;
           </Button>
         </div>
       </section>

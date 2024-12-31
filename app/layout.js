@@ -7,8 +7,8 @@ import { InningsProvider } from "./_context/InningsContext";
 
 export const metadata = {
   title: {
-    template: "%s / CricScore",
-    default: "your cricket scoreboard // CricScore",
+    template: "%s / cricSnap",
+    default: "your cricket scoreboard // cricSnap",
   },
   description:
     "Create and manage your own cricket match's score and stats with our interactive scoreboard simulator ceasekeeper",

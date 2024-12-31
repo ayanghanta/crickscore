@@ -1,6 +1,6 @@
-# CircScore
+# CricsSnap
 
-**CircScore** is a cricket scoreboard simulation app built using Next.js. The app allows users to simulate a full cricket match, track scores in real time, and manage player stats with ease. It's designed for cricket fans, players, and anyone looking to simulate a match and enjoy the excitement of live score tracking.
+**CricsSnap** is a cricket scoreboard simulation app built using Next.js. The app allows users to simulate a full cricket match, track scores in real time, and manage player stats with ease. It's designed for cricket fans, players, and anyone looking to simulate a match and enjoy the excitement of live score tracking.
 
 ## Features
 
@@ -16,4 +16,4 @@
 
 ## Demo
 
-**Live 🚀**: [circScore.netlify.app](https://circscore.netlify.app)
+**Live 🚀**: [CricsSnap.netlify.app](https://cricsnap.vercel.app/)

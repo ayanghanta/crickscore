@@ -17,7 +17,7 @@ function page() {
           </h1>
           <p className="text-lg text-gray-200 mb-16">
             Simulate a full cricket match, manage scores, players, and more with
-            CricScore.
+            CricSnap.
           </p>
           <Button href="/teams" type="primary">
             Let&apos; play &rarr;

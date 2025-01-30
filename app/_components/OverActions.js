@@ -4,6 +4,7 @@ import Button from "./Button";
 import OutTypes from "./OutTypes";
 import ExtrasActions from "./ExtrasActions";
 import Modal from "./ui/Modal";
+import ByesRun from "./ByesRun";
 
 function OverActions() {
   const [fallWicket, setFallWicket] = useState(false);
@@ -89,10 +90,8 @@ function OverActions() {
             </Modal.Button>
           </div>
 
-          <Modal.Button id="wicket">
-            <p className="bg-red-400 text-white hover:bg-red-500 space-x-2 px-2 py-1 transition duration-200 font-bold text-lg row-span-2 flex items-center justify-center cursor-pointer">
-              <span>WICKET</span>
-            </p>
+          <Modal.Button id="byesRun">
+            <Button>Byes</Button>
           </Modal.Button>
 
           <Button onClick={() => scoreValidRun(3)}>3</Button>
@@ -106,6 +105,12 @@ function OverActions() {
               <Button>+</Button>
             </Modal.Button>
           </div>
+
+          <Modal.Button id="wicket">
+            <p className="bg-red-400 text-white hover:bg-red-500 space-x-2 px-2 py-1 transition duration-200 font-bold text-lg flex items-center justify-center cursor-pointer">
+              <span>WICKET</span>
+            </p>
+          </Modal.Button>
         </div>
         <Modal.Window id="wicket">
           <OutTypes outHandler={handleWicketFall} />
@@ -117,6 +122,10 @@ function OverActions() {
 
         <Modal.Window id="no">
           <ExtrasActions bowlType="no" />
+        </Modal.Window>
+
+        <Modal.Window id="byesRun">
+          <ByesRun />
         </Modal.Window>
       </Modal>
     </div>

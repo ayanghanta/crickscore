@@ -3,6 +3,7 @@ import Button from "./Button";
 import { useInnings } from "../_context/InningsContext";
 import ByesCheck from "./ByesCheck";
 import RunoutType from "./RunoutType";
+import RunOptions from "./RunOptions";
 
 function ExtrasActions({ bowlType, handelCloseModal }) {
   const {
@@ -111,31 +112,6 @@ function ExtrasActions({ bowlType, handelCloseModal }) {
           Save action
         </Button>
       </div>
-    </div>
-  );
-}
-
-function RunOptions({ clickHandler }) {
-  return (
-    <div className="flex gap-2 mb-6">
-      <Button type="modalRun" onClick={() => clickHandler(0)}>
-        0
-      </Button>
-      <Button type="modalRun" onClick={() => clickHandler(1)}>
-        1
-      </Button>
-      <Button type="modalRun" onClick={() => clickHandler(2)}>
-        2
-      </Button>
-      <Button type="modalRun" onClick={() => clickHandler(3)}>
-        3
-      </Button>
-      <Button type="modalRun" onClick={() => clickHandler(4)}>
-        4
-      </Button>
-      <Button type="modalRun" onClick={() => clickHandler(6)}>
-        6
-      </Button>
     </div>
   );
 }

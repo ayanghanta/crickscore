@@ -226,6 +226,21 @@ function reducer(state, action) {
 
       return { ...updatedDataAfterNo, ...updateCurrentBattersN };
 
+    case "byesRun":
+      const {
+        bowler: bowlerByes,
+        run: byesRun,
+        batter: batterFaceBall,
+      } = action.payload;
+      const byesBowl = new Bowl(bowlerByes, batterFaceBall)
+        .score(byesRun)
+        .byesBall(byesRun);
+      bowlerByes.bowl(getRunData(byesBowl));
+
+      const updateDataAfterByes = updateAllOversData(state, byesBowl);
+
+      return { ...updateDataAfterByes };
+
     case "wicketFall":
       const {
         wicketType,

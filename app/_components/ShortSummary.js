@@ -24,6 +24,7 @@ function ShortSummary() {
           if (bowl.type === "WD") return <Wide bowl={bowl} key={i} />;
           else if (bowl.type === "NO") return <NO bowl={bowl} key={i} />;
           else if (bowl.type === "W") return <Wicket bowl={bowl} key={i} />;
+          else if (bowl.type === "BYES") return <Byes bowl={bowl} key={i} />;
           else if (bowl.run === 6 || bowl.run === 4)
             return <Boundary bowl={bowl} key={i} />;
           else
@@ -43,7 +44,6 @@ function ShortSummary() {
 }
 
 function Wide(bowl) {
-  console.log(bowl);
   return (
     <span className="font-bold bg-gray-400 text-gray-50 px-3 text-lg">
       WD+{+bowl.bowl.run - 1}
@@ -69,6 +69,14 @@ function Boundary(bowl) {
   return (
     <span className="font-bold bg-green-500 text-gray-50 px-3 text-lg">
       {bowl.bowl.run}
+    </span>
+  );
+}
+
+function Byes(bowl) {
+  return (
+    <span className="font-bold bg-gray-500 text-gray-50 px-3 text-lg">
+      B ({bowl.bowl.run})
     </span>
   );
 }

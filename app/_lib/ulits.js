@@ -46,7 +46,11 @@ export function rotateStrike(
 }
 
 export const getRunData = (bowl) => {
-  return { isLegal: bowl.isLegal, run: bowl.run, wicket: bowl.wicket ? 1 : 0 };
+  return {
+    isLegal: bowl.isLegal,
+    run: bowl.type === "BYES" ? 0 : bowl.run,
+    wicket: bowl.wicket ? 1 : 0,
+  };
 };
 
 export class Bowl {
@@ -74,6 +78,12 @@ export class Bowl {
     this.isLegal = false;
     this.type = "NO";
     this.freeHit = true;
+    return this;
+  }
+  byesBall(run) {
+    this.run = run;
+    this.type = "BYES";
+    this.isLegal = false;
     return this;
   }
   wicketFall(run = 0, outBatter, wicketType) {
